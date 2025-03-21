@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400..700;1,400..700&family=Playwrite+IN:wght@100..400&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik+Vinyl&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Weather3</title>
+    {% load static %}
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Roboto", serif;
+            background: url("/static/images/miasto.webp") 50% 0 no-repeat fixed;            
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-color: black;
+        }
+        
+        .main-content {
+            display: flex;              /* Włącz Flexbox */
+            justify-content: space-between; /* Umieść elementy na końcach */
+            align-items: flex-start;   /* wyrównaj do góry */
+            flex-wrap: wrap;
+            margin-top: 20px;         /* Dodaj margines */
+            margin: 50px;
+            color: white;
+
+        }
+
+
+
+        h1{
+            margin-top: 50px;
+        }
+
+        .temps button{
+            background-image: none;
+            background-color: rgb(149, 0, 255);
+            border: 2px solid black;
+            border-radius: 5px;
+            padding: 5px;
+            color: rgb(0, 0, 0);
+            text-decoration: double;
+            cursor: pointer;
+        }
+
+        .temps button:hover{
+            background-color: #666;
+        }
+
+        .btn{
+            border-radius: 5px;
+            transition-duration: 0.4s;
+
+        }
+
+        .btn:hover{
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+        }
+
+        .headers{
+            text-align: center;
+        }
+        
+        .srchform{
+            color: black;
+
+        }
+
+        #srchforminput {
+            width: 30%;
+            height: 35px;
+            font-size: 20px;
+
+            border-bottom: 3px solid;
+            border-top: 0px solid;
+            border-left: 0px solid;
+            border-right: 0px solid;
+
+            border-color: aqua;
+            border-radius: 24px;
+            padding-left: 10px;
+            margin-bottom: 15px;
+            margin-top: 30px;
+            outline: none;
+            transition: color 1.3s ease-in-out;
+
+            background-color: none !important;
+            background: none !important;  
+        }
+
+
+        #srchforminput::placeholder{
+            font-size: 20px;
+        }
+
+
+        .srchbtn{
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn{
+            cursor: pointer;
+        }
+
+        .delete-button{
+            background: rgba(36, 161, 132, 0);
+            border: 0;
+            transition: 0.5s ease-in-out;
+        }
+
+        #deletesvg{
+            background: rgba(36, 161, 132, 0);
+            background-image: none;
+
+        }
+
+        #deletesvg:active {
+          transform: translateY(4px);
+          border: 0;
+        }
+
+        #srchicon{
+            position: relative; /* Pozwala na przesunięcie */
+            top: 10px;
+        }
+
+        #id_Temp_scale{
+            color: aqua;
+            width: 10%;
+            padding: 10px 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+
+        .input option{
+            cursor: pointer;
+        }
+        
+        .current-city {
+            text-align: left;           /* Wyrównaj do lewej */
+        }
+
+        .current-city h2{
+            background: rgba(36, 161, 132, 0.5);
+            filter: alpha(opacity=50);  
+        }
+
+        .current-city img {
+            background: rgba(36, 161, 132, 0.0);
+            filter: alpha(opacity=50);
+        }
+        
+        ul {
+            list-style-type: none; /* Usuń kropki */
+            padding: 0;
+        }
+
+        #savesvg{
+            margin-right: 116px;
+
+        }
+
+        .saved-cities {
+            width: 45%;                /* Określ szerokość dla zapisanych miast */
+            text-align: right;          /* Wyrównaj do prawej */
+            align-items: flex-end;
+            justify-content: flex-end;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .city-card {
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px;
+            align-items: flex-end;
+            justify-content: flex-end;
+            margin-right: 160px;
+            min-width: 30%;
+            width: 60%;
+
+            background: rgba(36, 161, 132, 0.5);
+            filter: alpha(opacity=50);      
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            color: white;
+            animation: fadeIn 0.6s ease-in-out; /* Animacja pojawiania się formularza */
+            
+        }
+
+        .current-card{
+            background: rgba(74, 36, 161, 0.5) !important;
+            filter: alpha(opacity=50); 
+            animation: fadeIn 0.6s ease-in-out; /* Animacja pojawiania się formularza */
+
+        }
+
+        .current-card-city{
+            color: rgba(234, 22, 22, 0.4) !important;
+            filter: alpha(opacity=50);   
+        }
+
+        .maxminli span{
+            color: rgba(234, 22, 22, 0.4) !important;
+
+        }
+
+        .city-card ul{
+            background: rgba(36, 161, 132, 0.0);
+            filter: alpha(opacity=50);   
+            text-align: center;
+        }
+
+        .city-card li{
+            background: rgba(36, 161, 132, 0.0);
+            filter: alpha(opacity=50);   
+        }
+
+        .city-card img{
+            background: rgba(36, 161, 132, 0.0);
+            filter: alpha(opacity=50);
+        }
+
+        .current5days{
+            display: flex;
+            width: 50%;
+            flex-direction: row !important;
+        }
+
+        #liimg {
+            text-align: right;
+        }
+
+        #liimg img{
+            min-width: 60px;
+
+        }
+        
+        .licity{
+            font-size: 25px;
+            font-style:inherit;
+            text-align: center;
+            color: rgba(3, 19, 49, 0.4);
+        }
+
+        .litemp{
+            text-align: left;
+            font-family: "Archivo Narrow", sans-serif;
+            font-optical-sizing: auto;
+            font-size: 33px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .maxminli{
+            font-size: 13px;
+            background: rgba(36, 161, 132, 0.0);
+            filter: alpha(opacity=50);
+        }
+
+        .maxminli span
+        {
+            background: rgba(36, 161, 132, 0.0);
+            filter: alpha(opacity=50);
+            color: rgba(3, 19, 49, 0.6);
+
+        }
+
+        .header {
+            color: white;
+            padding: 20px;             /* Dodaj padding */
+            justify-content: space-between;
+        }
+
+        .right{
+            display: flex;
+            align-items: end;
+            justify-content: end;
+            flex-direction: column;
+
+        }
+
+        .right span {
+            background-color: red;
+            margin: 20px;
+        }
+
+        .nonauth{
+            flex-direction: column;
+        }
+
+        #logoutbtn{
+            background-color: red;            
+            background-image: none;
+            border-radius: 4px;
+            border: 10px solid red;
+            color: white;
+            text-decoration: none;
+        }
+
+        #Registerbtn{
+            background-color: rgb(0, 255, 4);
+            background-image: none;
+
+            border-radius: 4px;
+            border: 10px solid rgb(0, 255, 4);
+            color: white;
+            text-decoration: none;
+            margin-top: 25px;
+        }
+
+        #loginbtn{
+            background-color: rgb(34, 0, 255);
+            background-image: none;
+
+            border-radius: 4px;
+            border: 10px solid rgb(34, 0, 255);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* login and register  */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        logincard{
+            display: flex;
+            justify-content: center; /* Wyśrodkowanie w poziomie */
+            align-items: center; /* Wyśrodkowanie w pionie */
+            height: 90vh; /* Wysokość pełnego ekranu */
+            margin: 0;
+            background-size: cover; /* Dopasowanie obrazu do ekranu */
+        }
+
+        .form button{
+            text-align: center;
+        }
+
+        .loginform{
+            background: rgba(34, 0, 255, 0.5) !important;
+            filter: alpha(opacity=50); 
+            padding: 30px;
+            padding-top: 5px;
+            border-radius: 5px;
+            margin: 5px;
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            animation: fadeIn 0.6s ease-in-out; /* Animacja pojawiania się formularza */
+
+        }
+
+        .loginform form{
+            background: rgba(0, 255, 255, 0.676);
+            filter: alpha(opacity=50); 
+            border-radius: 5px;
+            padding-bottom: 30px;
+            padding-top: 30px;
+
+        }
+
+        .loginform p{
+            background: rgba(36, 161, 132, 0.5);
+            filter: alpha(opacity=50); 
+        }
+
+        .loginform label{
+            background: rgba(36, 161, 132, 0.5);
+            filter: alpha(opacity=50); 
+            min-width: 150%;
+        }
+
+        .loginform button{
+            background: rgba(36, 161, 132, 0.5);
+            filter: alpha(opacity=50); 
+            display: block;
+            margin: auto; 
+        }
+
+        .form-group{
+            background: rgba(36, 161, 132, 0.0);
+            filter: alpha(opacity=50);
+            text-align: center;
+
+        }
+
+        .form-group h1{
+            margin-bottom: 50px;
+        }
+
+        .form-group h4{
+            margin-top: 20px;
+        }
+
+        .form-group h1, h4, a {
+            background: rgba(36, 161, 132, 0.0);
+            filter: alpha(opacity=50);
+            color: #ffffff;
+            font-weight: bolder;
+        }
+
+        .loginform input{
+            min-width: 90%;
+            background: rgba(4, 3, 3, 0.13); /* Półprzezroczyste tło */
+            filter: alpha(opacity=50); 
+
+            width: 30%;
+            height: 35px;
+            font-size: 20px;
+
+            border-bottom: 3px rgba(0, 255, 255, 1) solid;
+            border-top: 0px solid;
+            border-left: 0px solid;
+            border-right: 0px solid;
+
+            color: #ffff;
+
+            border-color: aqua;
+            border-radius: 4px;
+            padding-left: 10px;
+            margin-bottom: 15px;
+            outline: none;
+            transition: color 1.3s ease-in-out;
+
+        }
+
+        .loginform input::placeholder{
+            color: black; /* Jasny placeholder */
+
+        }
+
+        .loginform label{
+            text-align: left;
+            font-weight: bolder;
+            color: white;
+        }
+
+        .loginform p{
+            background: rgba(255, 0, 0, 0);
+
+            margin-left: 15px;
+        }
+
+        #logisubmit {
+            text-align: center;
+            width: 50%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background-image: linear-gradient(to right, #36d1dc, #5b86e5); /* Gradient */
+            background-size: 200%; /* Powiększ gradient */
+            background-position: left; /* Początkowa pozycja gradientu */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-position 0.4s ease-in-out; /* Płynne przejście */
+        }
+        
+        #logisubmit:hover {
+            background-position: right; /* Przesuwa gradient w prawo */
+        }
+
+        errorcard{
+            display: flex;
+            justify-content: center; /* Wyśrodkowanie w poziomie */
+            align-items: center; /* Wyśrodkowanie w pionie */
+            height: 6vh; /* Wysokość pełnego ekranu */
+            margin: 5px;
+            background-size: cover; /* Dopasowanie obrazu do ekranu */
+            min-height: 1vh;
+
+        }
+
+        .error{
+            background: rgba(255, 0, 0, 0.5);
+
+            filter: alpha(opacity=50); 
+            padding: 30px;
+            border-radius: 5px;
+            margin-bottom: 200px;
+            margin-top: 2px;
+        }
+
+        .errorlist{
+            background: rgba(255, 0, 195, 0.2);
+            border-radius: 5px;
+            filter: alpha(opacity=50); 
+            color: red;
+
+        }
+
+        .errorlist li{
+            background: rgba(255, 0, 195, 0.2);
+            filter: alpha(opacity=50); 
+            color: rgb(255, 255, 255);
+            padding: 10px;
+        }
+
+        
+        @media(max-width: 694px){
+
+            .main-content{
+                width: 100%;
+                flex-direction: column;
+            }
+            
+
+            .current-city{
+                max-width: 50%;
+
+                margin-left: 5%;
+            }
+
+            .saved-cities{
+                margin-top: 150px;
+            }
+
+            #id_Temp_scale{
+                width: 35%;
+            }
+
+            #srchforminput{
+                width: 50%; 
+            }
+
+            .city-card{
+                margin-right: 0;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                min-width: 150%;
+            }
+
+            errorcard{
+                min-height: 20vh;
+            }
+        }
+
+        @media(max-width: 400px){
+            errorcard{
+                min-height: 40vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <container>
+        <box>
+        {% block content %}  <!-- Blok dla treści -->
+        {% endblock %}
+        </box>
+    </container>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{% extends "main.html" %}
+{% block content %}
+
+<logincard>
+    <div class="loginform">
+        <div class="form-group">
+            <h1>Register in to the <br/> weather application</h1>
+         </div>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}"><p>{{form.username.label}}</p></label>
+                {{ form.username }}
+            </div>
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}"><p>{{form.password1.label}}</p></label>
+                    {{form.password1}}
+                </div>
+            <label>
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}"><p>{{form.password2.label}}</p></label>
+                    {{form.password2}}
+                </div>
+            <button id="logisubmit" class="btn" type="submit" class="submit-btn">Zarejestruj się</button>
+        </form>
+        <div class="form-group">
+            <h4>Don't have account? <a href="{% url 'loginView' %}">Log in </a> </h4>
+        </div>
+        
+    </div>
+
+</logincard>
+
+    {% if form.username.errors or form.password1.errors or form.password2.errors  %}
+<errorcard>
+    <div class="error">
+        {{ form.username.errors }}
+        {{ form.password1.errors }}
+        {{ form.password2.errors }}
+    </div>
+</errorcard>
+
+{% endif %}
+
+
+{% endblock  %}
