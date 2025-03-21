@@ -56,7 +56,7 @@ class homeView(View):
     template_name = 'home.html'
 
     def get(self, request):
-        url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=b406c5d25cfa9b745262fecdd3466876' 
+        url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=#your api key' 
         
         city_name = request.GET.get('city_name', 'Warsaw')
         weather = None
