@@ -18,6 +18,7 @@ A weather application built with Django that allows users to search for weather 
 - CSS
 - JavaScript/Ajax
 - OpenWeatherMap API
+- RESTful API
 
 ## Installation
 
