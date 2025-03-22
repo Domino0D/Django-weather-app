@@ -50,6 +50,8 @@ pip install -r requirements.txt
 
 11. and enjoy!
 
+## demo
+https://youtu.be/Uo2acCj-XQo
 
 
 
